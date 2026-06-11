@@ -1,4 +1,4 @@
-# bnw — Brave New Word. Copy these files into sites/b0y-eu/bnw/ to adopt.
+# bnw: Brave New Word. Copy these files into sites/b0y-eu/bnw/ to adopt.
 
 default: check
 
@@ -7,7 +7,7 @@ check: check-ids
     npx -y -p typescript tsc -p jsconfig.json
 
 # The ids passed to $() in app.js are the contract with index.html.
-# tsc can't see this (getElementById types the same for any string) — so grep is the checker.
+# tsc can't see this (getElementById types the same for any string), so grep is the checker.
 check-ids:
     #!/usr/bin/env bash
     set -euo pipefail
@@ -18,7 +18,7 @@ check-ids:
     exit $fail
 
 # Caddy serves precompressed .br/.gz siblings. Editing a source file without
-# regenerating them serves the STALE compressed copy — silently. Run after every edit.
+# regenerating them serves the STALE compressed copy, silently. Run after every edit.
 build:
     #!/usr/bin/env bash
     set -euo pipefail

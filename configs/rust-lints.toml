@@ -1,5 +1,5 @@
 # Paste into the workspace Cargo.toml. Layout rule: many small crates so
-# `cargo check` stays <5s — the workspace split IS the performance config.
+# `cargo check` stays <5s; the workspace split IS the performance config.
 #
 # justfile wiring:
 #   check: cargo check --workspace

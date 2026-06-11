@@ -1,4 +1,4 @@
-# Pinned toolchains — `mise install` sets up everything. Uncomment what the
+# Pinned toolchains. `mise install` sets up everything. Uncomment what the
 # repo uses; pin minor versions, bump deliberately.
 # mise also owns per-directory env vars (no direnv) and installs jj + just.
 [tools]

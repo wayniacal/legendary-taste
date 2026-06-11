@@ -1,0 +1,75 @@
+# Web lane wiring
+
+Three sub-lanes. Route by what the project actually is, not by habit.
+
+| Project | Stack | Oracle |
+|---|---|---|
+| Web app | Vite + React + strict TS + Biome | `tsc --noEmit` typechecks the markup itself (TSX); Biome lints TS and CSS |
+| Content site with components | Astro | `astro check` |
+| Pure markdown site | Zola | `zola check` (validates internal links and anchors) |
+| Tiny vanilla page | hand HTML/CSS/JS | html-validate plus an id-contract grep (see bnw-example) |
+
+The reason TSX over hand-written HTML: browsers never fail loudly. Broken
+HTML renders anyway, error-corrected into something almost right. Putting
+markup inside the type system turns misspelled attributes, wrong props, and
+bad handler signatures into compile errors. Hand-written HTML is for pages
+too small to have contracts.
+
+React is chosen for training density, not runtime speed. Its one silent
+failure mode (wrong useEffect dependency arrays: stale data, no error) is
+turned into a static error by Biome's useExhaustiveDependencies rule, set
+to error in configs/biome.json. Do not downgrade that rule.
+
+## justfile wiring (app sub-lane)
+
+```just
+check:
+    npx tsc --noEmit && biome check .
+
+fix:
+    biome check --write .
+
+test:
+    pnpm exec playwright test
+
+run:
+    pnpm dev
+
+# Runtime oracle: drives a real browser, screenshots land in e2e/shots/
+# where the agent can look at them and the human can judge them.
+verify:
+    pnpm exec playwright test --reporter=line
+```
+
+## Playwright + axe
+
+One spec gives you load-check, screenshot, and accessibility in a single run:
+
+```ts
+import { test, expect } from '@playwright/test';
+import AxeBuilder from '@axe-core/playwright';
+
+test('home loads, looks right, passes axe', async ({ page }) => {
+  await page.goto('/');
+  await page.screenshot({ path: 'e2e/shots/home.png', fullPage: true });
+  const a11y = await new AxeBuilder({ page }).analyze();
+  expect(a11y.violations).toEqual([]);
+});
+```
+
+Screenshots are the one oracle for "renders wrong": agents can read images,
+and the human judging the page is the final check no static tool replaces.
+
+## Links
+
+lychee (Rust) in CI and before deploys:
+
+```
+lychee --no-progress 'dist/**/*.html'
+```
+
+## wasm
+
+Not a lane. When a project needs in-browser compute, that is the Rust lane
+with a different build target (trunk or wasm-pack); cargo check stays the
+oracle. See bnw-example for what the deployed result looks like.

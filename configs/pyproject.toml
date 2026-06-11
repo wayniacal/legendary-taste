@@ -9,11 +9,11 @@ dependencies = []
 [dependency-groups]
 dev = ["pyright", "ruff", "pytest", "hypothesis", "syrupy"]
 
-# pyright until Astral's ty (Rust) ships stable — the last Node tool in the
+# pyright until Astral's ty (Rust) ships stable, the last Node tool in the
 # Python lane; revisit when ty hits 1.0
 [tool.pyright]
 typeCheckingMode = "strict"
-# gradual typing's holes are where the bugs are — treat unannotated as broken
+# gradual typing's holes are where the bugs are: treat unannotated as broken
 reportMissingTypeStubs = "warning"
 
 [tool.ruff]
