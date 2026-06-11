@@ -1,9 +1,10 @@
-# taste
+# legendary-taste
 
 Scaffolding for agent-built projects. The agent does the setup and the
 coding; the kit catches mistakes automatically; the human judges results.
 
 Non-coders: read **GUIDE.md**. It's the whole manual, one page, no jargon.
+Setting this up for someone else: read **tutor.md**.
 
 Principle: convert runtime failures into static failures, keep the check
 fast. Agent leverage = oracle quality x iteration speed.
@@ -12,9 +13,10 @@ fast. Agent leverage = oracle quality x iteration speed.
 
 | File | Purpose |
 |---|---|
-| `GUIDE.md` | The human's manual: lay language, five rules, the loop |
+| `GUIDE.md` | The PRODUCER's manual: lay language, the producer contract, five rules, the loop |
+| `tutor.md` | The introducer's manual: machine prep, the first session, what not to do |
 | `CLAUDE.md` | The agent's manual: self-bootstrapping first-run steps + standing rules |
-| `justfile` | Standard verbs (`check`/`fix`/`test`/`run`/`save`), same in every repo |
+| `justfile` | Standard verbs (`check`/`fix`/`test`/`run`/`ship`/`save`), same in every repo |
 | `.mise.toml` | Pinned toolchains + per-directory env vars |
 | `.claude/settings.json` | Hook: `just check` after every agent edit, failures feed back automatically |
 | `.github/workflows/ci.yml` | CI is `just check && just test`, same contract as local |
@@ -26,7 +28,8 @@ fast. Agent leverage = oracle quality x iteration speed.
 
 `jj git init --colocate`, so jj and git share the repo. jj's working copy
 is always a commit: nothing is ever lost, `jj undo` reverses anything, and
-`just save` is the only verb a non-coder needs. The colocated `.git` keeps
+`just save` checkpoints and backs up to the remote in one verb. The
+colocated `.git` keeps
 GitHub, CI, and agents' deep git knowledge fully functional.
 
 ## Rules that aren't files

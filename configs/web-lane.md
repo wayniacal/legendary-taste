@@ -39,7 +39,20 @@ run:
 # where the agent can look at them and the human can judge them.
 verify:
     pnpm exec playwright test --reporter=line
+
+# Publish. End by printing the live URL.
+ship:
+    pnpm build
+    npx -y gh-pages -d dist --nojekyll
+    @echo "live: https://<user>.github.io/<repo>/"
 ```
+
+For the ship recipe, enable Pages once during first-run wiring
+(`gh api repos/<user>/<repo>/pages -f 'source[branch]=gh-pages'` or the
+repo settings page). Zola and Astro ship the same way with their own
+output dirs (`public/`, `dist/`). A server path behind a reverse proxy
+works too; the contract is only that `just ship` ends with a URL the
+PRODUCER can send to someone.
 
 ## Playwright + axe
 

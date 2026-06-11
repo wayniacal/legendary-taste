@@ -19,7 +19,15 @@ test:
 run:
     @echo "TODO(agent): wire local run" >&2; exit 1
 
-# Checkpoint everything. jj snapshots the working copy automatically; this
-# names the state and opens a new one. Any mistake: jj undo. Nothing is lost.
+# Put it on a real URL the user can send to someone. Wire per lane:
+# GitHub Pages for static output, a server path, wherever. See configs/web-lane.md.
+ship:
+    @echo "TODO(agent): wire deploy, see CLAUDE.md first-run steps" >&2; exit 1
+
+# Checkpoint everything, then back it up. jj snapshots the working copy
+# automatically; any mistake is reversible with jj undo. The push is allowed
+# to fail (offline is fine, backup happens on the next save).
 save msg="checkpoint":
     jj commit -m "{{msg}}"
+    jj bookmark move main --to @- 2>/dev/null || jj bookmark create main -r @-
+    -jj git push --remote origin -b main

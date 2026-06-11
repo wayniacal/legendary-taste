@@ -1,4 +1,4 @@
-# <project>, built on the taste template
+# <project>, built on the legendary-taste template
 
 <!-- AGENT FIRST RUN. Do these once, in order, then delete this comment block.
 1. Ask the user, in plain words, what they want to build. Pick the lane:
@@ -8,10 +8,13 @@
    - Python: only if ML or data libraries require it
    - bash: glue under 50 lines
 2. Wire the justfile. The stubs exit 1 on purpose. Replace check (fast oracle,
-   under 5s), fix, test, run for the chosen lane. Copy the matching file from
-   configs/ to the repo root; delete the configs/ entries you didn't use.
+   under 5s), fix, test, run, and ship for the chosen lane. Copy the matching
+   file from configs/ to the repo root; delete the configs/ entries you didn't use.
+   ship must end by printing the URL where the result is now live.
 3. Pin the toolchain in .mise.toml [tools]; run `mise install`.
-4. If .jj is missing: `jj git init --colocate`. Then `just save "project start"`.
+4. If .jj is missing: `jj git init --colocate`. Create a private GitHub repo
+   (ask the user what to call it) and add it as the origin remote, so every
+   save backs itself up. Then `just save "project start"`.
 5. Verify the hook: make a trivial edit and confirm `just check` fires.
 6. Rewrite this file: one-line description, Commands, Invariants, Gotchas.
    Keep the Working rules section verbatim. Delete this block.
@@ -36,7 +39,8 @@
 - `just fix`: auto-fixers
 - `just test`: full suite, deterministic
 - `just run`: start the thing locally
-- `just save "msg"`: checkpoint everything (jj)
+- `just ship`: publish to the live URL
+- `just save "msg"`: checkpoint everything and back it up (jj + push)
 
 ## Invariants
 
