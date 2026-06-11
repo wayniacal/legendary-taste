@@ -1,0 +1,23 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(just:*)",
+      "Bash(npx -y -p typescript tsc:*)",
+      "Bash(brotli:*)",
+      "Bash(gzip:*)"
+    ]
+  },
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "cd \"$CLAUDE_PROJECT_DIR\" && out=$(just check 2>&1) || { echo \"$out\" >&2; exit 2; }"
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,27 @@
+# Python only when the ecosystem demands it. uv for everything; never bare pip.
+# just check = uv run pyright; just fix = uv run ruff check --fix
+[project]
+name = "TODO"
+version = "0.1.0"
+requires-python = ">=3.12"
+dependencies = []
+
+[dependency-groups]
+dev = ["pyright", "ruff", "pytest", "hypothesis", "syrupy"]
+
+# pyright until Astral's ty (Rust) ships stable — the last Node tool in the
+# Python lane; revisit when ty hits 1.0
+[tool.pyright]
+typeCheckingMode = "strict"
+# gradual typing's holes are where the bugs are — treat unannotated as broken
+reportMissingTypeStubs = "warning"
+
+[tool.ruff]
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "UP", "B", "SIM", "RUF"]
+
+[tool.pytest.ini_options]
+# determinism: fixed hash seed comes from CI env; no network, no real clocks
+addopts = "-q -p no:cacheprovider"

@@ -1,0 +1,23 @@
+# Paste into the workspace Cargo.toml. Layout rule: many small crates so
+# `cargo check` stays <5s — the workspace split IS the performance config.
+#
+# justfile wiring:
+#   check: cargo check --workspace
+#   fix:   cargo clippy --workspace --fix --allow-dirty
+#   test:  cargo nextest run  (or cargo test)
+#
+# Habits, not config: insta for snapshots, proptest for properties,
+# Miri when touching unsafe, sqlx query!() for any SQL (compile-time checked
+# against the schema; commit the .sqlx offline cache so CI checks without a DB).
+
+[workspace.lints.rust]
+unsafe_code = "warn"
+
+[workspace.lints.clippy]
+all = { level = "warn", priority = -1 }
+unwrap_used = "warn"
+dbg_macro = "warn"
+
+# Each member crate opts in with:
+# [lints]
+# workspace = true

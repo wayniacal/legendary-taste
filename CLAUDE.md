@@ -1,0 +1,44 @@
+# <project> — built on the taste template
+
+<!-- AGENT — FIRST RUN. Do these once, in order, then delete this comment block.
+1. Ask the user, in plain words, what they want to build. Pick the lane:
+   Rust (default for anything long-lived) / strict TypeScript (web UI) /
+   Python (only if ML or data libraries require it) / bash (glue under 50 lines).
+2. Wire the justfile. The stubs exit 1 on purpose — replace check (fast oracle,
+   <5s), fix, test, run for the chosen lane. Copy the matching file from
+   configs/ to the repo root; delete the configs/ entries you didn't use.
+3. Pin the toolchain in .mise.toml [tools]; run `mise install`.
+4. If .jj is missing: `jj git init --colocate`. Then `just save "project start"`.
+5. Verify the hook: make a trivial edit and confirm `just check` fires.
+6. Rewrite this file: one-line description, Commands, Invariants, Gotchas.
+   Keep the Working rules section verbatim. Delete this block.
+-->
+
+## Working rules
+
+- After every edit, `just check` must pass — the hook enforces this. Never
+  bypass it and never weaken a config to make it pass; fix the code.
+- Whenever the check is green and `just run` behaves: `just save "<plain words>"`.
+- The user may not read code. Explain what changed in ordinary language;
+  never paste raw error output at them.
+- Recovery is `jj undo` (and `jj op log` to see history). Nothing is ever
+  lost. Prefer rewinding to a good state over patching a broken one.
+- Secrets never go in code, chat, or saves. They live in `.env.local`
+  (untracked), loaded via the `[env]` section of .mise.toml.
+- Small steps: one working feature per save, not one big bang.
+
+## Commands
+
+- `just check` — fast oracle; runs automatically after every edit
+- `just fix` — auto-fixers
+- `just test` — full suite, deterministic
+- `just run` — start the thing locally
+- `just save "msg"` — checkpoint everything (jj)
+
+## Invariants
+
+<!-- rules the code can't express; the agent must not violate these -->
+
+## Gotchas
+
+<!-- things that cost an hour once — write them down the same day -->

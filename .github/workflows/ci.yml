@@ -1,0 +1,16 @@
+# CI is the same contract as local: just check && just test. If they pass
+# here but not on your machine (or vice versa), the toolchain pin is wrong.
+name: ci
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: jdx/mise-action@v2   # installs everything in .mise.toml
+      - run: just check
+      - run: just test

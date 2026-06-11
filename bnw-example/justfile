@@ -1,0 +1,35 @@
+# bnw — Brave New Word. Copy these files into sites/b0y-eu/bnw/ to adopt.
+
+default: check
+
+# Oracle: JSDoc-level typecheck (no TS conversion, no build step) + id contract.
+check: check-ids
+    npx -y -p typescript tsc -p jsconfig.json
+
+# The ids passed to $() in app.js are the contract with index.html.
+# tsc can't see this (getElementById types the same for any string) — so grep is the checker.
+check-ids:
+    #!/usr/bin/env bash
+    set -euo pipefail
+    fail=0
+    for id in $(grep -oE "\\\$\('[A-Za-z0-9-]+'\)" app.js | sed "s/^..'//; s/')$//" | sort -u); do
+        grep -q "id=\"$id\"" index.html || { echo "app.js uses \$('$id') but index.html has no id=\"$id\"" >&2; fail=1; }
+    done
+    exit $fail
+
+# Caddy serves precompressed .br/.gz siblings. Editing a source file without
+# regenerating them serves the STALE compressed copy — silently. Run after every edit.
+build:
+    #!/usr/bin/env bash
+    set -euo pipefail
+    for f in index.html app.js style.css corpora/*.txt; do
+        if [ ! -f "$f.br" ] || [ "$f" -nt "$f.br" ]; then
+            brotli -f -k "$f"
+            gzip -f -k -9 "$f"
+            echo "recompressed $f"
+        fi
+    done
+
+# Serve locally. wasm requires http(s), file:// won't work.
+run:
+    python3 -m http.server 8090

@@ -1,0 +1,15 @@
+# Pinned toolchains — `mise install` sets up everything. Uncomment what the
+# repo uses; pin minor versions, bump deliberately.
+# mise also owns per-directory env vars (no direnv) and installs jj + just.
+[tools]
+just = "1"
+jj = "0.42"
+# rust = "1.87"
+# node = "22.16"
+# python = "3.12"
+# uv = "latest"
+# pnpm = "10"
+
+[env]
+# FOO = "bar"
+_.file = { path = ".env.local", redact = true }
