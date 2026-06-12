@@ -7,7 +7,7 @@ Three sub-lanes. Route by what the project actually is, not by habit.
 | Web app | Vite + React + strict TS + Biome | `tsc --noEmit` typechecks the markup itself (TSX); Biome lints TS and CSS |
 | Content site with components | Astro | `astro check` |
 | Pure markdown site | Zola | `zola check` (validates internal links and anchors) |
-| Tiny vanilla page | hand HTML/CSS/JS | html-validate plus an id-contract grep (see bnw-example) |
+| Tiny vanilla page | hand HTML/CSS/JS | html-validate (pinned, e.g. `npx -y html-validate@11`, with a committed .htmlvalidate.json) plus an id-contract grep (see bnw-example) |
 
 The reason TSX over hand-written HTML: browsers never fail loudly. Broken
 HTML renders anyway, error-corrected into something almost right. Putting
@@ -40,10 +40,13 @@ run:
 verify:
     pnpm exec playwright test --reporter=line
 
-# Publish. End by printing the live URL.
+# Publish, then prove it landed: fetch the URL and grep a sentinel.
+# (Pages deploys lag by up to a minute; if the curl races a fresh deploy,
+# rerun it rather than weakening the check.)
 ship:
     pnpm build
-    npx -y gh-pages -d dist --nojekyll
+    npx -y gh-pages@6 -d dist --nojekyll
+    curl -sf "https://<user>.github.io/<repo>/" | grep -q "<sentinel>"
     @echo "live: https://<user>.github.io/<repo>/"
 ```
 

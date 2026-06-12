@@ -22,7 +22,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "cd \"$CLAUDE_PROJECT_DIR\" && out=$(just check 2>&1) || { echo \"$out\" >&2; exit 2; }"
+            "command": "cd \"$CLAUDE_PROJECT_DIR\" && export PATH=\"$HOME/.local/share/mise/shims:$PATH\" && out=$(just check 2>&1) || { echo \"$out\" >&2; exit 2; }"
           }
         ]
       }

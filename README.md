@@ -35,6 +35,13 @@ GitHub, CI, and agents' deep git knowledge fully functional.
 ## Rules that aren't files
 
 - Commit lockfiles, always, every ecosystem.
+- Everything `check`/`test` invokes is pinned. Bare `npx -y tool` re-resolves
+  latest every run; the ruleset drifts until the gate fails on untouched code.
+- `ship` ends by fetching the live URL and grepping a sentinel, not by
+  printing the URL and hoping.
+- Assets over a few MB: copy with `cp -u`/rsync so ship skips them when
+  unchanged, raise jj's `snapshot.max-new-file-size` deliberately, and note
+  both in CLAUDE.md.
 - No network in tests, no real clocks, fixed seeds. A test that flakes twice
   gets quarantined same day.
 - `just check` stays under 5 seconds or it gets split.

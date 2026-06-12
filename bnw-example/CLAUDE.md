@@ -5,9 +5,12 @@ wasm, zero dependencies, all generation local. Live at https://b0y.eu/bnw/.
 
 ## Commands
 
-- `just check`: typecheck app.js (JSDoc via tsc) + verify every `$('id')` exists in index.html
+- `just check`: typecheck app.js (JSDoc via pinned tsc) + verify every `$('id')` exists in index.html
 - `just build`: regenerate stale `.br`/`.gz` siblings, REQUIRED after any edit
 - `just run`: serve on :8090 (wasm needs http, not file://)
+- `just test`: alias for check; the typecheck + id contract is the whole oracle
+- `just ship`: copy to the live root, then curl the URL and grep a sentinel
+- `just save "msg"`: jj checkpoint + push
 
 ## Invariants
 

@@ -3,8 +3,10 @@
 default: check
 
 # Oracle: JSDoc-level typecheck (no TS conversion, no build step) + id contract.
+# typescript is pinned: an unpinned npx tool re-resolves latest every run and
+# the ruleset drifts until check fails on code nobody touched.
 check: check-ids
-    npx -y -p typescript tsc -p jsconfig.json
+    npx -y -p typescript@6 tsc -p jsconfig.json
 
 # The ids passed to $() in app.js are the contract with index.html.
 # tsc can't see this (getElementById types the same for any string), so grep is the checker.
@@ -33,3 +35,23 @@ build:
 # Serve locally. wasm requires http(s), file:// won't work.
 run:
     python3 -m http.server 8090
+
+# No auto-fixers for hand-written vanilla JS; tsc findings are fixed by hand.
+fix:
+    @echo "no auto-fixers for this lane; fix tsc findings by hand" >&2; exit 1
+
+# No behavior suite; the typecheck + id contract is the whole oracle.
+test: check
+
+# Copy into the live root, then prove the deploy landed: fetch the URL and
+# grep a sentinel. A printed URL is hope; a fetched one is verification.
+ship: check build
+    cp -p index.html app.js style.css *.br *.gz "$HOME/sites/b0y-eu/bnw/"
+    cp -p corpora/*.txt corpora/*.br corpora/*.gz "$HOME/sites/b0y-eu/bnw/corpora/"
+    curl -sf https://b0y.eu/bnw/ | grep -q "Brave New Word"
+    @echo "live: https://b0y.eu/bnw/"
+
+save msg="checkpoint":
+    jj commit -m "{{msg}}"
+    jj bookmark set main -r @-
+    -jj git push --remote origin -b main

@@ -10,12 +10,19 @@
 2. Wire the justfile. The stubs exit 1 on purpose. Replace check (fast oracle,
    under 5s), fix, test, run, and ship for the chosen lane. Copy the matching
    file from configs/ to the repo root; delete the configs/ entries you didn't use.
-   ship must end by printing the URL where the result is now live.
-3. Pin the toolchain in .mise.toml [tools]; run `mise install`.
+   ship must end by fetching the live URL and grepping for a sentinel string;
+   printing the URL proves nothing.
+3. Pin the toolchain in .mise.toml [tools]; run `mise install`. Everything
+   check/test invokes gets pinned — mise, a lockfile, or tool@X.Y. Bare
+   `npx -y tool` / `uvx tool` re-resolves latest on every run: slow, networked,
+   and the ruleset drifts until the gate fails on code nobody touched. Commit
+   each linter's config file so the ruleset is explicit, not the version's default.
 4. If .jj is missing: `jj git init --colocate`. Create a private GitHub repo
    (ask the user what to call it) and add it as the origin remote, so every
    save backs itself up. Then `just save "project start"`.
-5. Verify the hook: make a trivial edit and confirm `just check` fires.
+5. Verify the hook: make a trivial edit and confirm `just check` fires. Then
+   confirm the verbs work outside this session's environment:
+   `env -i HOME="$HOME" bash -c "cd $PWD && PATH=$HOME/.local/share/mise/shims:/usr/bin:/bin just check"`.
 6. Rewrite this file: one-line description, Commands, Invariants, Gotchas.
    Keep the Working rules section verbatim. Delete this block.
 -->
@@ -41,6 +48,9 @@
 - `just run`: start the thing locally
 - `just ship`: publish to the live URL
 - `just save "msg"`: checkpoint everything and back it up (jj + push)
+
+If `just` is not found: it lives in the mise shims, which non-interactive
+shells don't load. `export PATH="$HOME/.local/share/mise/shims:$PATH"` first.
 
 ## Invariants
 

@@ -19,8 +19,10 @@ test:
 run:
     @echo "TODO(agent): wire local run" >&2; exit 1
 
-# Put it on a real URL the user can send to someone. Wire per lane:
-# GitHub Pages for static output, a server path, wherever. See configs/web-lane.md.
+# Put it on a real URL the user can send to someone, then prove it landed:
+# end with `curl -sf <url> | grep -q "<sentinel>"`, not a printed URL and hope.
+# Wire per lane: GitHub Pages for static output, a server path, wherever.
+# See configs/web-lane.md.
 ship:
     @echo "TODO(agent): wire deploy, see CLAUDE.md first-run steps" >&2; exit 1
 
