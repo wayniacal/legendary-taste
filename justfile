@@ -29,5 +29,5 @@ ship:
 # to fail (offline is fine, backup happens on the next save).
 save msg="checkpoint":
     jj commit -m "{{msg}}"
-    jj bookmark move main --to @- 2>/dev/null || jj bookmark create main -r @-
+    jj bookmark set main -r @-
     -jj git push --remote origin -b main
