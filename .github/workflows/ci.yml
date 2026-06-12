@@ -8,6 +8,9 @@ on:
 
 jobs:
   ci:
+    # the kit's own repo is marked as a template and its verbs are exit-1
+    # stubs by design; CI only means something once a project wires them
+    if: ${{ !github.event.repository.is_template }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
