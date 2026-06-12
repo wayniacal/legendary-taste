@@ -13,7 +13,7 @@
    ship must end by fetching the live URL and grepping for a sentinel string;
    printing the URL proves nothing.
 3. Pin the toolchain in .mise.toml [tools]; run `mise install`. Everything
-   check/test invokes gets pinned — mise, a lockfile, or tool@X.Y. Bare
+   check/test invokes gets pinned: mise, a lockfile, or tool@X.Y. Bare
    `npx -y tool` / `uvx tool` re-resolves latest on every run: slow, networked,
    and the ruleset drifts until the gate fails on code nobody touched. Commit
    each linter's config file so the ruleset is explicit, not the version's default.
