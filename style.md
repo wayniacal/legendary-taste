@@ -43,6 +43,8 @@ Language convention wins; these fill the gaps.
 
 - Public API: PascalCase with a short module prefix (JS_NewContext, Buf_Init).
 - Internal: snake_case with a subsystem prefix (js_call_c_function, gc_decref).
+- Prefixes exist because C has no namespaces. In languages with modules the
+  module is the prefix: buf::init, not Buf_Init.
 - Types PascalCase. Constants and enum variants ALL_CAPS with prefix.
 - Locals short: p (the pointer being worked), s (string), ctx, i/j/n.
   Output parameters get a p prefix (plen, pres). Bool fields: is_ prefix.
@@ -67,7 +69,9 @@ Language convention wins; these fill the gaps.
   labels at function bottom. Elsewhere: early return, `?`, try; same shape.
 - Free or close a resource the moment it is no longer needed, not at
   function end.
-- int-returning functions: -1 error, 0 success. Predicates return bool.
+- Error values per language: Result in Rust, exceptions in Python, the
+  C convention of -1 error / 0 success only where ints are the idiom.
+  Predicates return bool everywhere.
 
 ## Performance
 
