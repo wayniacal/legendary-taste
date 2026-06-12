@@ -39,6 +39,8 @@
 - Secrets never go in code, chat, or saves. They live in `.env.local`
   (untracked), loaded via the `[env]` section of .mise.toml.
 - Small steps: one working feature per save, not one big bang.
+- All code, comments, docs, and commit messages follow style.md. Its
+  "Machine tells" section is a hard rule: none of those patterns ship.
 
 ## Commands
 
