@@ -41,6 +41,11 @@
 - Small steps: one working feature per save, not one big bang.
 - All code, comments, docs, and commit messages follow style.md. Its
   "Machine tells" section is a hard rule: none of those patterns ship.
+- style.md's "Before writing code" ladder is a hard rule: take the lowest
+  rung that holds before writing anything, and never add an abstraction,
+  dependency, or file nobody asked for. Non-trivial logic ships with one
+  runnable check; the not-lazy list (validation, error handling, security,
+  accessibility, real-hardware calibration) is never skipped.
 
 ## Commands
 

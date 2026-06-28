@@ -6,9 +6,34 @@ code and pages (bellard.org: quickjs, tcc, libbf, ffmpeg). Where the target
 language's enforced idiom conflicts (rustfmt, gofmt, PEP 8, biome), the
 language wins; everything else here still applies.
 
+## Before writing code
+
+The best code is the code never written. Lazy means efficient, not careless.
+Stop at the first rung that holds:
+
+- Does this need to exist at all? (YAGNI)
+- Does the standard library already do it? Use it.
+- Does a native platform feature cover it? Use it.
+- Does an already-installed dependency solve it? Use it.
+- Can it be one line? Make it one line.
+- Only then write the minimum that works.
+
+Question complex requests before building: do you need X, or does Y cover it?
+None of this licenses cutting corners on the things that bite: input
+validation at trust boundaries, error handling that prevents data loss,
+security, accessibility, calibration for real hardware (the platform is
+never the spec ideal: a clock drifts, a sensor reads off), and anything
+explicitly asked for. Those get full effort regardless. Non-trivial logic
+ships with one runnable check: the smallest thing that fails if the logic
+breaks, an assert-based self-check or one small test file, no frameworks,
+no fixtures. Trivial one-liners need none.
+
 ## Principles
 
-- Simplest correct solution. No abstraction until repetition forces one.
+- Simplest correct solution. No abstraction until repetition forces one;
+  no boilerplate nobody asked for. Boring over clever.
+- Between two equal-size approaches, take the edge-case-correct one. Lazy
+  means less code, not the flimsier algorithm.
 - Few substantial files over many small ones. One self-contained file with
   clear sections beats thirty files of ceremony (quickjs.c: one file, 61k
   lines, the whole engine).
@@ -57,6 +82,10 @@ Language convention wins; these fill the gaps.
 - Known limitations and open questions: `/* XXX: ... */`, phrased as a
   question when unsure. Real examples: `/* XXX: optimize */`,
   `/* XXX: should generate an exception ? */`. No FIXME.
+- An intentional simplification with a known ceiling (a global lock, an
+  O(n^2) scan, a naive heuristic) gets the same `XXX:` marker, naming the
+  ceiling and the upgrade path: `/* XXX: O(n^2) rescan, fine under ~1k
+  rows; index by id when it grows */`.
 - Preconditions: `/* WARNING: 'p' must be a typed array */`.
 - Pre-function comments only for return semantics, ownership transfer, or
   non-obvious contracts.
