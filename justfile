@@ -24,11 +24,14 @@ test:
 run:
     @echo "TODO(agent): wire local run" >&2; exit 1
 
-# Supply-chain audit: scan every committed lockfile (Cargo.lock, pnpm-lock.yaml,
-# uv.lock) for known-vulnerable deps. One scanner, all ecosystems:
+# Supply-chain + secrets audit: scan every committed lockfile (Cargo.lock,
+# pnpm-lock.yaml, uv.lock) for known-vulnerable deps, and the repo history for
+# leaked secrets. One scanner per failure class:
 #   osv-scanner scan source -r .
-# (uncomment osv-scanner in .mise.toml). A freshly-disclosed CVE can fail this
-# on untouched code — that is the point: disclosure is news, not drift. Runs in CI.
+#   gitleaks git --no-banner --redact .
+# (uncomment both in .mise.toml). --redact is not optional: a found secret must
+# not land in logs or agent context. A freshly-disclosed CVE can fail this on
+# untouched code — that is the point: disclosure is news, not drift. Runs in CI.
 audit:
     @echo "TODO(agent): wire dependency audit, see CLAUDE.md first-run steps" >&2; exit 1
 

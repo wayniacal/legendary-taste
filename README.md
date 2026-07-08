@@ -43,7 +43,8 @@ GitHub, CI, and agents' deep git knowledge fully functional.
   latest every run; the ruleset drifts until the gate fails on untouched code.
   Run tools as pinned devDependencies via `pnpm exec`, never `npx -y`.
 - `just audit` scans the committed lockfiles for known-vulnerable deps (one
-  cross-ecosystem scanner, osv-scanner) and runs in CI. A freshly-disclosed
+  cross-ecosystem scanner, osv-scanner) and the repo history for leaked
+  secrets (gitleaks, always `--redact`), and runs in CI. A freshly-disclosed
   CVE failing the gate on untouched code is a true positive, not drift.
 - `ship` ends by fetching the live URL and grepping a sentinel, not by
   printing the URL and hoping.

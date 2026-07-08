@@ -10,6 +10,7 @@ jj = "0.42"
 # uv = "0.10"
 # pnpm = "10"
 # "aqua:google/osv-scanner" = "2"   # `just audit` (cross-ecosystem lockfile scanner)
+# "aqua:gitleaks/gitleaks" = "8"    # `just audit` (secret-leak scan, --redact)
 
 [env]
 # FOO = "bar"

@@ -12,7 +12,9 @@
    file from configs/ to the repo root; delete the configs/ entries you didn't use.
    ship must end by fetching the live URL and grepping for a sentinel string;
    printing the URL proves nothing. audit scans the committed lockfiles for known
-   CVEs: uncomment osv-scanner in .mise.toml and wire `osv-scanner scan source -r .`.
+   CVEs and the repo for leaked secrets: uncomment osv-scanner and gitleaks in
+   .mise.toml and wire `osv-scanner scan source -r .` plus
+   `gitleaks git --no-banner --redact .`.
 3. Pin the toolchain in .mise.toml [tools]; run `mise install`. Everything
    check/test invokes gets pinned: mise, a lockfile, or tool@X.Y. Bare
    `npx -y tool` / `uvx tool` re-resolves latest on every run: slow, networked,
@@ -54,7 +56,8 @@
 - `just fix`: auto-fixers
 - `just test`: full suite, deterministic
 - `just run`: start the thing locally
-- `just audit`: scan committed lockfiles for known-vulnerable deps (CI runs it too)
+- `just audit`: scan committed lockfiles for known-vulnerable deps and the repo
+  for leaked secrets (CI runs it too)
 - `just ship`: publish to the live URL
 - `just save "msg"`: checkpoint everything and back it up (jj + push)
 

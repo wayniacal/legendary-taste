@@ -17,7 +17,7 @@ first, Rust where a robust Rust option exists, fewest total tools.
 | **ShellCheck** | Haskell | Shell script oracle | Not Rust either; irreplaceable. Highest value-per-line static analyzer in the stack. |
 | **osv-scanner** | Go | Supply-chain oracle (`just audit`) | One binary reads Cargo.lock, pnpm-lock.yaml, and uv.lock against the OSV database, so the whole stack shares a single auditor instead of cargo-audit + pnpm audit + pip-audit. Not Rust, but the "fewest total tools" win is decisive. Scans the lockfile the build already pins; building managers from source would not catch a poisoned dependency, this does. |
 | **ast-grep** | Rust | Structural search + custom lint rules | tree-sitter search/rewrite by AST: ripgrep for syntax. `ast-grep scan` with a rule file is a *writable* oracle — ban a pattern and a violation becomes a static failure. Beats Comby (syntactic, quieter project) and GritQL (newer). The youngest tool in the stack; the rule files are version-controlled, so drift is visible. |
-| **gitleaks** | Go | Secret-leak oracle (pre-commit / CI gate) | Fast offline regex+entropy scan; turns "no secrets in code" from a convention into a gate. Go, not Rust — same irreplaceable-function exception as ShellCheck/osv-scanner. trufflehog verifies harder but needs the network (see On watch). |
+| **gitleaks** | Go | Secret-leak oracle (`just audit` / CI gate) | Fast offline regex+entropy scan; turns "no secrets in code" from a convention into a gate. Runs inside `just audit` with `--redact` so a found secret never lands in logs or agent context. Go, not Rust — same irreplaceable-function exception as ShellCheck/osv-scanner. trufflehog verifies harder but needs the network (see On watch). |
 | **actionlint** | Go | GitHub Actions workflow oracle | Validates workflow syntax, `${{ }}` expressions, and embedded `run:` shell (via ShellCheck). A broken workflow is silent until push; this makes it loud. Earns its slot only where the repo ships workflows. |
 | **typos** | Rust | Source spell-check (optional) | Catches typo'd identifiers, config keys, and doc links — a silent class. Source-aware (handles camelCase), fast, single binary. Optional and lowest-priority; codespell is more proven but Python and heavier. |
 
@@ -79,6 +79,13 @@ build target (trunk or wasm-pack); cargo check stays the oracle.
   and osv-scanner (deps), so it earns no slot here.
 - **codespell**: the proven-by-tenure spell checker, but Python and heavier;
   typos covers the same failure class as one Rust binary.
+- **pre-commit**: the git-hook manager the rest of the world uses. Here the
+  gate manager is the harness hook (`just check` after every edit) plus CI
+  running the same verbs: it fires on edit, not on commit, which is earlier
+  and stricter, and adds no Python dependency.
+- **trivy / dive**: container and image scanners. Real tools, wrong layer:
+  osv-scanner already covers the lockfiles and no lane ships containers.
+  They earn slots the day one does.
 
 ## On watch (not yet; battle-tested wins over new)
 
@@ -95,6 +102,10 @@ build target (trunk or wasm-pack); cargo check stays the oracle.
 - **trufflehog**: a secret scanner that *verifies* candidates against provider
   APIs — far fewer false positives than gitleaks. Adopt if verification is
   worth the network dependency and slower run; gitleaks stays the offline default.
+- **hurl** (Rust): HTTP requests as declarative files with asserts, an
+  oracle-shaped API test runner. No API-only lane exists yet; Playwright owns
+  the web lane and nextest/pytest cover backends. The day a project is a
+  headless API, hurl is the answer.
 
 ## Why any Node tools at all
 
