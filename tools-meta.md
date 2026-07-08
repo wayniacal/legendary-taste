@@ -15,6 +15,11 @@ first, Rust where a robust Rust option exists, fewest total tools.
 | **ripgrep + fd** | Rust | Search | The agent navigates by grep; these are its eyes. |
 | **pnpm** | TypeScript | Node packages | Not Rust, but no mature Rust alternative exists. Strict node_modules layout catches phantom dependencies. Implementation language matters least here; it is not in the edit-check loop. |
 | **ShellCheck** | Haskell | Shell script oracle | Not Rust either; irreplaceable. Highest value-per-line static analyzer in the stack. |
+| **osv-scanner** | Go | Supply-chain oracle (`just audit`) | One binary reads Cargo.lock, pnpm-lock.yaml, and uv.lock against the OSV database, so the whole stack shares a single auditor instead of cargo-audit + pnpm audit + pip-audit. Not Rust, but the "fewest total tools" win is decisive. Scans the lockfile the build already pins; building managers from source would not catch a poisoned dependency, this does. |
+| **ast-grep** | Rust | Structural search + custom lint rules | tree-sitter search/rewrite by AST: ripgrep for syntax. `ast-grep scan` with a rule file is a *writable* oracle — ban a pattern and a violation becomes a static failure. Beats Comby (syntactic, quieter project) and GritQL (newer). The youngest tool in the stack; the rule files are version-controlled, so drift is visible. |
+| **gitleaks** | Go | Secret-leak oracle (pre-commit / CI gate) | Fast offline regex+entropy scan; turns "no secrets in code" from a convention into a gate. Go, not Rust — same irreplaceable-function exception as ShellCheck/osv-scanner. trufflehog verifies harder but needs the network (see On watch). |
+| **actionlint** | Go | GitHub Actions workflow oracle | Validates workflow syntax, `${{ }}` expressions, and embedded `run:` shell (via ShellCheck). A broken workflow is silent until push; this makes it loud. Earns its slot only where the repo ships workflows. |
+| **typos** | Rust | Source spell-check (optional) | Catches typo'd identifiers, config keys, and doc links — a silent class. Source-aware (handles camelCase), fast, single binary. Optional and lowest-priority; codespell is more proven but Python and heavier. |
 
 ## Per-language oracles
 
@@ -63,6 +68,17 @@ build target (trunk or wasm-pack); cargo check stays the oracle.
 - **black / flake8 / isort**: ruff.
 - **npm / yarn**: pnpm is stricter and faster; npm's loose hoisting hides
   phantom deps that surface as runtime failures.
+- **cargo-audit / `pnpm audit` / pip-audit**: three per-ecosystem scanners
+  with three output formats; osv-scanner covers all their lockfiles from one
+  binary against the same OSV database.
+- **Comby / GritQL**: structural-search rivals to ast-grep. Comby matches
+  syntactically (no real AST); GritQL is newer with less density. ast-grep
+  wins on tree-sitter accuracy, Rust, and adoption.
+- **Semgrep**: heavier (Python/OCaml) and registry/cloud-shaped. It is the
+  specialist for security rule-scanning, but that overlaps gitleaks (secrets)
+  and osv-scanner (deps), so it earns no slot here.
+- **codespell**: the proven-by-tenure spell checker, but Python and heavier;
+  typos covers the same failure class as one Rust binary.
 
 ## On watch (not yet; battle-tested wins over new)
 
@@ -76,6 +92,9 @@ build target (trunk or wasm-pack); cargo check stays the oracle.
 - **Svelte 5 / Solid**: faster than React and arguably cleaner, but each
   carries its own silent reactivity trap and a tier less training data.
   Revisit as their density grows.
+- **trufflehog**: a secret scanner that *verifies* candidates against provider
+  APIs — far fewer false positives than gitleaks. Adopt if verification is
+  worth the network dependency and slower run; gitleaks stays the offline default.
 
 ## Why any Node tools at all
 

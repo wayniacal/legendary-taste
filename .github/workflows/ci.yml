@@ -15,5 +15,15 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: jdx/mise-action@v2   # installs everything in .mise.toml
+      # Deps install from the lockfile only — never re-resolve. A drifted or
+      # swapped dependency fails here instead of shipping. Each step is a no-op
+      # when its lockfile is absent, so the same CI serves every lane.
+      - run: pnpm install --frozen-lockfile
+        if: ${{ hashFiles('pnpm-lock.yaml') != '' }}
+      - run: uv sync --locked
+        if: ${{ hashFiles('uv.lock') != '' }}
+      - run: cargo fetch --locked
+        if: ${{ hashFiles('Cargo.lock') != '' }}
       - run: just check
       - run: just test
+      - run: just audit

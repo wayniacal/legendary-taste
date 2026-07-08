@@ -2,7 +2,7 @@
   "permissions": {
     "allow": [
       "Bash(just:*)",
-      "Bash(npx -y -p typescript tsc:*)",
+      "Bash(npx -y -p typescript@6.0.3 tsc:*)",
       "Bash(brotli:*)",
       "Bash(gzip:*)"
     ]

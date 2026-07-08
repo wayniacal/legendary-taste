@@ -3,10 +3,13 @@
 default: check
 
 # Oracle: JSDoc-level typecheck (no TS conversion, no build step) + id contract.
-# typescript is pinned: an unpinned npx tool re-resolves latest every run and
-# the ruleset drifts until check fails on code nobody touched.
+# typescript is pinned to an EXACT version: `@6` still re-resolves to the latest
+# 6.x every run, and a tsc minor bump changes diagnostics, so the gate would fail
+# on code nobody touched. This lane has no lockfile by design (zero deps, copy to
+# adopt); tsc has no transitive deps, so an exact pin is the whole supply chain.
+# Bump deliberately. See README "Rules that aren't files".
 check: check-ids
-    npx -y -p typescript@6 tsc -p jsconfig.json
+    npx -y -p typescript@6.0.3 tsc -p jsconfig.json
 
 # The ids passed to $() in app.js are the contract with index.html.
 # tsc can't see this (getElementById types the same for any string), so grep is the checker.

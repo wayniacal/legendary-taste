@@ -8,10 +8,11 @@
    - Python: only if ML or data libraries require it
    - bash: glue under 50 lines
 2. Wire the justfile. The stubs exit 1 on purpose. Replace check (fast oracle,
-   under 5s), fix, test, run, and ship for the chosen lane. Copy the matching
+   under 5s), fix, test, run, audit, and ship for the chosen lane. Copy the matching
    file from configs/ to the repo root; delete the configs/ entries you didn't use.
    ship must end by fetching the live URL and grepping for a sentinel string;
-   printing the URL proves nothing.
+   printing the URL proves nothing. audit scans the committed lockfiles for known
+   CVEs: uncomment osv-scanner in .mise.toml and wire `osv-scanner scan source -r .`.
 3. Pin the toolchain in .mise.toml [tools]; run `mise install`. Everything
    check/test invokes gets pinned: mise, a lockfile, or tool@X.Y. Bare
    `npx -y tool` / `uvx tool` re-resolves latest on every run: slow, networked,
@@ -53,11 +54,14 @@
 - `just fix`: auto-fixers
 - `just test`: full suite, deterministic
 - `just run`: start the thing locally
+- `just audit`: scan committed lockfiles for known-vulnerable deps (CI runs it too)
 - `just ship`: publish to the live URL
 - `just save "msg"`: checkpoint everything and back it up (jj + push)
 
 If `just` is not found: it lives in the mise shims, which non-interactive
-shells don't load. `export PATH="$HOME/.local/share/mise/shims:$PATH"` first.
+shells don't load. bash/zsh: `export PATH="$HOME/.local/share/mise/shims:$PATH"`.
+fish: `fish_add_path ~/.local/share/mise/shims`. Any shell, one command:
+`env PATH="$HOME/.local/share/mise/shims:$PATH" just <verb>`.
 
 ## Invariants
 

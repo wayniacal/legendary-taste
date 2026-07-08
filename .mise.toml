@@ -7,8 +7,9 @@ jj = "0.42"
 # rust = "1.87"
 # node = "22.16"
 # python = "3.12"
-# uv = "latest"
+# uv = "0.10"
 # pnpm = "10"
+# "aqua:google/osv-scanner" = "2"   # `just audit` (cross-ecosystem lockfile scanner)
 
 [env]
 # FOO = "bar"

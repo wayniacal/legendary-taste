@@ -16,7 +16,7 @@ fast. Agent leverage = oracle quality x iteration speed.
 | `GUIDE.md` | The PRODUCER's manual: lay language, the producer contract, five rules, the loop |
 | `tutor.md` | The introducer's manual: machine prep, the first session, what not to do |
 | `CLAUDE.md` | The agent's manual: self-bootstrapping first-run steps + standing rules |
-| `justfile` | Standard verbs (`check`/`fix`/`test`/`run`/`ship`/`save`), same in every repo |
+| `justfile` | Standard verbs (`check`/`fix`/`test`/`run`/`audit`/`ship`/`save`), same in every repo |
 | `style.md` | Code/prose style (Bellard-derived) plus the machine-tells blacklist |
 | `.mise.toml` | Pinned toolchains + per-directory env vars |
 | `.claude/settings.json` | Hook: `just check` after every agent edit, failures feed back automatically |
@@ -35,9 +35,16 @@ GitHub, CI, and agents' deep git knowledge fully functional.
 
 ## Rules that aren't files
 
-- Commit lockfiles, always, every ecosystem.
+- Commit lockfiles, always, every ecosystem. Installs run from the lockfile,
+  never re-resolve: CI uses `pnpm install --frozen-lockfile`, `uv sync --locked`,
+  `cargo fetch --locked`; do the same locally. A swapped or drifted dependency
+  fails the install instead of shipping.
 - Everything `check`/`test` invokes is pinned. Bare `npx -y tool` re-resolves
   latest every run; the ruleset drifts until the gate fails on untouched code.
+  Run tools as pinned devDependencies via `pnpm exec`, never `npx -y`.
+- `just audit` scans the committed lockfiles for known-vulnerable deps (one
+  cross-ecosystem scanner, osv-scanner) and runs in CI. A freshly-disclosed
+  CVE failing the gate on untouched code is a true positive, not drift.
 - `ship` ends by fetching the live URL and grepping a sentinel, not by
   printing the URL and hoping.
 - Assets over a few MB: copy with `cp -u`/rsync so ship skips them when
@@ -46,4 +53,9 @@ GitHub, CI, and agents' deep git knowledge fully functional.
 - No network in tests, no real clocks, fixed seeds. A test that flakes twice
   gets quarantined same day.
 - `just check` stays under 5 seconds or it gets split.
+- Oracle recipes use the tool's own concise, no-color mode: drop ANSI and
+  progress noise, report only failures, but never a lossy summary format that
+  hides a diagnostic (`ruff --output-format=concise`, `tsc --pretty false`,
+  `nextest --status-level=fail` — not `cargo --message-format=short`). Fidelity
+  outranks brevity; the gate's job is to show the agent exactly what to fix.
 - Postgres for persistence, JSON-lines on stderr for logs, monorepo per project.

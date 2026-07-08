@@ -3,7 +3,10 @@
 
 default: check
 
-# Fast oracle, <5s. Wire to: cargo check / tsc --noEmit / uv run pyright
+# Fast oracle, <5s. Wire the lane's checker in its terse, no-color mode: drop
+# ANSI and progress noise, NEVER drop a diagnostic (no lossy summary formats like
+# cargo --message-format=short). Wire to: cargo check -q / tsc --noEmit
+# --pretty false / uv run ruff check --output-format=concise / uv run pyright
 check:
     @echo "TODO(agent): wire fast checker, see CLAUDE.md first-run steps" >&2; exit 1
 
@@ -11,13 +14,23 @@ check:
 fix:
     @echo "TODO(agent): wire auto-fixers" >&2; exit 1
 
-# Full suite. Deterministic: no network, no real clocks, fixed seeds.
+# Full suite. Deterministic: no network, no real clocks, fixed seeds. Report only
+# failures (passing tests are noise): cargo nextest run --status-level=fail /
+# pytest -q / playwright --reporter=line.
 test:
     @echo "TODO(agent): wire test suite" >&2; exit 1
 
 # Start the thing locally.
 run:
     @echo "TODO(agent): wire local run" >&2; exit 1
+
+# Supply-chain audit: scan every committed lockfile (Cargo.lock, pnpm-lock.yaml,
+# uv.lock) for known-vulnerable deps. One scanner, all ecosystems:
+#   osv-scanner scan source -r .
+# (uncomment osv-scanner in .mise.toml). A freshly-disclosed CVE can fail this
+# on untouched code — that is the point: disclosure is news, not drift. Runs in CI.
+audit:
+    @echo "TODO(agent): wire dependency audit, see CLAUDE.md first-run steps" >&2; exit 1
 
 # Put it on a real URL the user can send to someone, then prove it landed:
 # end with `curl -sf <url> | grep -q "<sentinel>"`, not a printed URL and hope.

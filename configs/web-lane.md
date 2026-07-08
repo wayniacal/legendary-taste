@@ -7,7 +7,7 @@ Three sub-lanes. Route by what the project actually is, not by habit.
 | Web app | Vite + React + strict TS + Biome | `tsc --noEmit` typechecks the markup itself (TSX); Biome lints TS and CSS |
 | Content site with components | Astro | `astro check` |
 | Pure markdown site | Zola | `zola check` (validates internal links and anchors) |
-| Tiny vanilla page | hand HTML/CSS/JS | html-validate (pinned, e.g. `npx -y html-validate@11`, with a committed .htmlvalidate.json) plus an id-contract grep (see bnw-example) |
+| Tiny vanilla page | hand HTML/CSS/JS | html-validate (a pinned devDependency in the lockfile, run as `pnpm exec html-validate`, with a committed .htmlvalidate.json) plus an id-contract grep (see bnw-example) |
 
 The reason TSX over hand-written HTML: browsers never fail loudly. Broken
 HTML renders anyway, error-corrected into something almost right. Putting
@@ -22,15 +22,19 @@ to error in configs/biome.json. Do not downgrade that rule.
 
 ## justfile wiring (app sub-lane)
 
+Every tool below is a pinned devDependency resolved from the lockfile via
+`pnpm exec` — never `npx -y <tool>`, which re-resolves latest every run and
+defeats the lockfile (CI installs with `--frozen-lockfile`; honor it locally too).
+
 ```just
 check:
-    npx tsc --noEmit && biome check .
+    pnpm exec tsc --noEmit --pretty false && biome check .
 
 fix:
     biome check --write .
 
 test:
-    pnpm exec playwright test
+    pnpm exec playwright test --reporter=line
 
 run:
     pnpm dev
@@ -45,7 +49,7 @@ verify:
 # rerun it rather than weakening the check.)
 ship:
     pnpm build
-    npx -y gh-pages@6 -d dist --nojekyll
+    pnpm exec gh-pages -d dist --nojekyll
     curl -sf "https://<user>.github.io/<repo>/" | grep -q "<sentinel>"
     @echo "live: https://<user>.github.io/<repo>/"
 ```

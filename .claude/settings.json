@@ -7,12 +7,15 @@
       "Bash(cargo check:*)",
       "Bash(cargo clippy:*)",
       "Bash(cargo test:*)",
-      "Bash(npx tsc:*)",
+      "Bash(pnpm exec:*)",
+      "Bash(pnpm install:*)",
       "Bash(pnpm test:*)",
       "Bash(uv run pyright:*)",
       "Bash(uv run pytest:*)",
+      "Bash(uv sync:*)",
       "Bash(ruff:*)",
-      "Bash(biome:*)"
+      "Bash(biome:*)",
+      "Bash(osv-scanner:*)"
     ]
   },
   "hooks": {
