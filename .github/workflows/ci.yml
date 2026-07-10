@@ -15,7 +15,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: jdx/mise-action@v2   # installs everything in .mise.toml
-      # Deps install from the lockfile only — never re-resolve. A drifted or
+      # Deps install from the lockfile only, never re-resolved. A drifted or
       # swapped dependency fails here instead of shipping. Each step is a no-op
       # when its lockfile is absent, so the same CI serves every lane.
       - run: pnpm install --frozen-lockfile

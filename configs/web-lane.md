@@ -23,7 +23,7 @@ to error in configs/biome.json. Do not downgrade that rule.
 ## justfile wiring (app sub-lane)
 
 Every tool below is a pinned devDependency resolved from the lockfile via
-`pnpm exec` — never `npx -y <tool>`, which re-resolves latest every run and
+`pnpm exec`, never `npx -y <tool>`, which re-resolves latest every run and
 defeats the lockfile (CI installs with `--frozen-lockfile`; honor it locally too).
 
 ```just

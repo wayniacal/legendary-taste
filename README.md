@@ -57,6 +57,6 @@ GitHub, CI, and agents' deep git knowledge fully functional.
 - Oracle recipes use the tool's own concise, no-color mode: drop ANSI and
   progress noise, report only failures, but never a lossy summary format that
   hides a diagnostic (`ruff --output-format=concise`, `tsc --pretty false`,
-  `nextest --status-level=fail` — not `cargo --message-format=short`). Fidelity
+  `nextest --status-level=fail`, not `cargo --message-format=short`). Fidelity
   outranks brevity; the gate's job is to show the agent exactly what to fix.
 - Postgres for persistence, JSON-lines on stderr for logs, monorepo per project.

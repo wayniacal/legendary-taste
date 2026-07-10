@@ -31,7 +31,7 @@ run:
 #   gitleaks git --no-banner --redact .
 # (uncomment both in .mise.toml). --redact is not optional: a found secret must
 # not land in logs or agent context. A freshly-disclosed CVE can fail this on
-# untouched code — that is the point: disclosure is news, not drift. Runs in CI.
+# untouched code. That is the point: disclosure is news, not drift. Runs in CI.
 audit:
     @echo "TODO(agent): wire dependency audit, see CLAUDE.md first-run steps" >&2; exit 1
 
