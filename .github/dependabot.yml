@@ -1,0 +1,9 @@
+version: 2
+updates:
+  # Action versions are the one dependency CI cannot pin through mise, so they
+  # rot silently: a deprecated runtime only surfaces as a warning until the
+  # runner drops it. Weekly PRs keep the bump small enough to read.
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
