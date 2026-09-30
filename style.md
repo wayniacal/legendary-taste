@@ -113,17 +113,75 @@ Language convention wins; these fill the gaps.
 ## Machine tells
 
 None of the following appear in any committed file, commit message, or
-published page. Each reads as generated text.
+published page. Each reads as generated text. Sources: Wikipedia's "Signs of
+AI writing" (WikiProject AI Cleanup), the blader/humanizer skill's 25
+patterns, and the getspike.ai note on why the patterns arise (safe
+continuations, reward for agreeable hedged prose, low-surprise decoding).
+Consulted 2026-09-30; nothing installed.
+
+Punctuation and formatting
 
 - Em dashes. Use a colon, a comma, parens, or two sentences.
+- Bold sprinkled through prose for emphasis; bold lead-ins on bullets or
+  paragraphs ("Strengths:", "The catch:"); labelled lists where the label
+  adds nothing. Emoji. Exclamation marks. Horizontal rules between sections.
+  Title Case headings. A heading restated in the first sentence under it.
+  Curly quotes where the format wants straight ones.
+- Colons used as a reveal ("There are three benefits: ...") or to stage a
+  point ("Here is what it means:"). State the point.
+- Hyphenated pairs after nouns ("results of high-quality"): drop the hyphen
+  unless the compound precedes the noun.
+
+Sentence shapes
+
+- Negative parallelism in every form: "not just X, but Y", "not X, but Y",
+  "it's not about X, it's about Y", "Y rather than X" used for weight. Keep a
+  contrast only when it corrects a belief the reader actually holds.
 - The triple cadence: "fast, simple, and reliable". Three reworded synonyms
-  are filler; say the one true thing.
-- "not just X, but Y" and "it's not about X, it's about Y".
+  are filler; say the one true thing. Three items only when there are three.
+- One-line closers that restate the paragraph ("That matters." "Either way,
+  we win."), and rows of dramatic fragments. Cut them.
+- Staged run-ups: "Let's dive in", "Here's the thing", "Stated plainly",
+  "The short answer is", "Put simply". Start with the point.
+- Faux-insight setups: "What most people miss is", "The real question is".
+- Arguing with no one: "I'm not saying...", "To be clear, this does not
+  mean...", when nobody raised the objection.
+- Repeated sentence openings across consecutive sentences.
+- Stacked hedges: "could potentially possibly". One qualifier, only when the
+  uncertainty is real and its source is named.
+- Passive voice that hides the actor ("results are preserved"). Name the
+  subject.
+- Uniform sentence and paragraph length. Vary them; let a fact stand alone
+  in a short sentence when it is the fact, not for effect.
+- Register held at one mid-formal pitch throughout.
+
+Words and phrases
+
 - Filler connectives: "Note that", "It's worth noting", "Importantly",
-  "In essence", "Overall", "In conclusion", "Additionally".
-- Marketing vocabulary: robust, comprehensive, seamless, powerful, elegant,
-  blazing, delve, leverage as a verb, utilize.
-- Bold sprinkled through prose for emphasis. Emoji. Exclamation marks.
+  "In essence", "Overall", "In conclusion", "Additionally", "Net:",
+  "Net-net".
+- Marketing and inflation vocabulary: robust, comprehensive, seamless,
+  powerful, elegant, blazing, vibrant, rich, profound, groundbreaking,
+  renowned, meticulous, intricate, nuanced, pivotal, crucial, key (as an
+  adjective), testament, tapestry, landscape, interplay, delve, leverage
+  (verb), utilize, showcase, boasts, garner, bolster, foster, cultivate,
+  enhance, empower, underscore, "stands as", "serves as", "marks a".
+- Copulative avoidance: "serves as", "functions as", "represents",
+  "features", "offers" where "is", "are", "has" would do.
+- Shallow participial riders bolted onto facts: "highlighting",
+  "underscoring", "reflecting", "emphasizing", "ensuring", "symbolizing".
+  Keep only when the source says so.
+- Vague attribution: "experts argue", "observers note", "industry reports",
+  "some critics". Name the person or cut.
+- Vague connection: "associated with", "in connection with". Say what the
+  relation is.
+- Sycophantic framing: "the good news is", "this is entirely fixable".
+- Aphorisms dressed as insight: "at its core", "the language of", "X is the
+  new Y".
+- Chatbot residue: "I hope this helps", "let me know", closing offers,
+  "as of my last update", any knowledge-cutoff disclaimer.
+- Writing about the document instead of the subject: "this section
+  covers", "as discussed above", "the write-up says so". Say the thing.
 - Comments that narrate the obvious or talk to a reviewer ("now we
   correctly handle...").
 - Summary paragraphs restating what was just said.
@@ -131,6 +189,21 @@ published page. Each reads as generated text.
 - AI attribution: no Co-Authored-By model trailers, no "Generated with"
   footers, anywhere in the repo or its history.
 
-The test: would the sentence survive in a Bellard changelog? "added
-resizable array buffers" survives. "Significantly enhanced the array
-buffer functionality to support seamless resizing" does not.
+Cleaning a draft
+
+1. Read the whole thing once and mark tells, strongest first. One instance
+   of a negative parallelism, a closer, a staged run-up, or an aphorism is
+   enough to mark.
+2. Redraft without treating the original structure as fixed. Merge or split
+   paragraphs, drop labels, reorder. Add no fact, name, date, number or
+   citation that is not in the source.
+3. Check the draft against the original for dropped or added claims.
+4. Read it aloud. Search for the survivors: contrasts, closers, triads,
+   colons as reveals, bold lead-ins, "which is what X is for".
+5. The test: would the sentence survive in a Bellard changelog? "added
+   resizable array buffers" survives. "Significantly enhanced the array
+   buffer functionality to support seamless resizing" does not.
+
+Grep for the fast ones before committing:
+
+    grep -nE "not (just|only|merely) |, but (also )?|rather than|Net:|Stated plainly|Here is what|The catch|In essence|Importantly|It's worth|worth noting|serves as|stands as|underscor|highlight|robust|comprehensive|leverage|delve|nuanced|pivotal|testament" FILE
